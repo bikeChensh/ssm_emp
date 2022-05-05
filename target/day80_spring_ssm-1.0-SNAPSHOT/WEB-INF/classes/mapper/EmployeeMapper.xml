@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chensh.ssm.emp.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="com.chensh.ssm.emp.pojo.Employee">
+    <id column="emp_id" jdbcType="INTEGER" property="empId" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="emp_name" jdbcType="VARCHAR" property="empName" />
+    <result column="emp_sex" jdbcType="VARCHAR" property="empSex" />
+    <result column="emp_duty" jdbcType="VARCHAR" property="empDuty" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    emp_id, dept_id, emp_name, emp_sex, emp_duty
+  </sql>
+  <select id="selectByExample" parameterType="com.chensh.ssm.emp.pojo.EmployeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where emp_id = #{empId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from employee
+    where emp_id = #{empId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.chensh.ssm.emp.pojo.EmployeeExample">
+    delete from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.chensh.ssm.emp.pojo.Employee">
+    insert into employee (emp_id, dept_id, emp_name, 
+      emp_sex, emp_duty)
+    values (#{empId,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER}, #{empName,jdbcType=VARCHAR}, 
+      #{empSex,jdbcType=VARCHAR}, #{empDuty,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chensh.ssm.emp.pojo.Employee">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="empId != null">
+        emp_id,
+      </if>
+      <if test="deptId != null">
+        dept_id,
+      </if>
+      <if test="empName != null">
+        emp_name,
+      </if>
+      <if test="empSex != null">
+        emp_sex,
+      </if>
+      <if test="empDuty != null">
+        emp_duty,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="empId != null">
+        #{empId,jdbcType=INTEGER},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="empName != null">
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null">
+        #{empSex,jdbcType=VARCHAR},
+      </if>
+      <if test="empDuty != null">
+        #{empDuty,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.chensh.ssm.emp.pojo.EmployeeExample" resultType="java.lang.Long">
+    select count(*) from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+  <!--List<Employee> selectEmpWithDept(EmployeeExample example);-->
+  <resultMap id="BaseWithDeptResultMap" type="com.chensh.ssm.emp.pojo.Employee">
+    <id column="emp_id" jdbcType="INTEGER" property="empId" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="emp_name" jdbcType="VARCHAR" property="empName" />
+    <result column="emp_sex" jdbcType="VARCHAR" property="empSex" />
+    <result column="emp_duty" jdbcType="VARCHAR" property="empDuty" />
+    <association property="dept" column="dept_id" select="com.chensh.ssm.emp.mapper.DepartmentMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <select id="selectEmpWithDept" parameterType="com.chensh.ssm.emp.pojo.EmployeeExample" resultMap="BaseWithDeptResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <update id="updateByExampleSelective" parameterType="map">
+    update employee
+    <set>
+      <if test="record.empId != null">
+        emp_id = #{record.empId,jdbcType=INTEGER},
+      </if>
+      <if test="record.deptId != null">
+        dept_id = #{record.deptId,jdbcType=INTEGER},
+      </if>
+      <if test="record.empName != null">
+        emp_name = #{record.empName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empSex != null">
+        emp_sex = #{record.empSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empDuty != null">
+        emp_duty = #{record.empDuty,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update employee
+    set emp_id = #{record.empId,jdbcType=INTEGER},
+      dept_id = #{record.deptId,jdbcType=INTEGER},
+      emp_name = #{record.empName,jdbcType=VARCHAR},
+      emp_sex = #{record.empSex,jdbcType=VARCHAR},
+      emp_duty = #{record.empDuty,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chensh.ssm.emp.pojo.Employee">
+    update employee
+    <set>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="empName != null">
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null">
+        emp_sex = #{empSex,jdbcType=VARCHAR},
+      </if>
+      <if test="empDuty != null">
+        emp_duty = #{empDuty,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where emp_id = #{empId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chensh.ssm.emp.pojo.Employee">
+    update employee
+    set dept_id = #{deptId,jdbcType=INTEGER},
+      emp_name = #{empName,jdbcType=VARCHAR},
+      emp_sex = #{empSex,jdbcType=VARCHAR},
+      emp_duty = #{empDuty,jdbcType=VARCHAR}
+    where emp_id = #{empId,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>
